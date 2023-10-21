@@ -19,16 +19,11 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
         try {
-            DatabaseMetaData md = getConnection().getMetaData();
-            ResultSet rs = md.getTables(null, null, "Users", null);
-
-            if (!rs.next()) {
                 PreparedStatement preparedStatement =
                         getConnection().prepareStatement(
-                                "CREATE TABLE Users (id bigint, name varchar(32), lastName varchar(32), age tinyint)"
+                                "CREATE TABLE IF NOT EXISTS Users (id bigint, name varchar(32), lastName varchar(32), age tinyint)"
                         );
                 preparedStatement.executeUpdate();
-            }
 
         } catch (SQLException e) {
             e.printStackTrace();
