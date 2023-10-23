@@ -21,7 +21,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try {
                 PreparedStatement preparedStatement =
                         getConnection().prepareStatement(
-                                "CREATE TABLE IF NOT EXISTS Users (id bigint, name varchar(32), lastName varchar(32), age tinyint)"
+                                "CREATE TABLE IF NOT EXISTS Users (id bigint AUTO_INCREMENT PRIMARY KEY , name varchar(32), lastName varchar(32), age tinyint)"
                         );
                 preparedStatement.executeUpdate();
 
@@ -32,12 +32,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() {
         try {
-            DatabaseMetaData md = getConnection().getMetaData();
-            ResultSet rs = md.getTables(null, null, "Users", null);
-            if (rs.next()) {
-                PreparedStatement preparedStatement = getConnection().prepareStatement("DROP TABLE Users");
-                preparedStatement.executeUpdate();
-            }
+            PreparedStatement preparedStatement = getConnection().prepareStatement("DROP TABLE IF EXISTS Users");
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,12 +42,11 @@ public class UserDaoJDBCImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         try {
             PreparedStatement preparedStatement =
-                    getConnection().prepareStatement("INSERT INTO Users VALUES(?, ?, ?, ?)");
+                    getConnection().prepareStatement("INSERT INTO Users(name, lastname, age) VALUES( ?, ?, ?)");
 
-            preparedStatement.setLong(1, COUNT++);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, lastName);
-            preparedStatement.setByte(4, age);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setByte(3, age);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
